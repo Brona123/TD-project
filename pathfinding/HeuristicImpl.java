@@ -20,8 +20,6 @@ public class HeuristicImpl implements Heuristic<Node> {
         int endY = endIndex / Labyrinth.CELL_WIDTH;
         int endX = endIndex % Labyrinth.CELL_WIDTH;
 
-        float distance = Math.abs(startX - endX) + Math.abs(startY - endY);
-
-        return distance;
+        return Math.abs(startX - endX) + Math.abs(startY - endY);
     }
 }

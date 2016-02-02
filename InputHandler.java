@@ -36,7 +36,8 @@ public class InputHandler implements InputProcessor {
 
         if (button == 0) { // Left click
             if (Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT)) {
-                //this.targetLabyrinth.toObstacle(screenX, screenY, Hud.selectedObject);
+                this.targetLabyrinth.toObstacle(screenX, screenY, Hud.selectedObject);
+            } else if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)){
                 this.targetLabyrinth.toBuildableLocation(screenX, screenY);
             } else {
                 this.targetLabyrinth.toRoad(screenX, screenY);
@@ -45,6 +46,8 @@ public class InputHandler implements InputProcessor {
         } else if (button == 1) { // Right click
             if (Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT)) {
                 this.targetLabyrinth.toTower(screenX, screenY, Hud.selectedTower);
+            } else if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)){
+                this.targetLabyrinth.toNotBuildableLocation(screenX, screenY);
             } else {
                 this.targetLabyrinth.toWall(screenX, screenY);
             }
@@ -73,14 +76,19 @@ public class InputHandler implements InputProcessor {
 
         if (this.draggingButton == 0) { // Left click
             if (Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT)) {
-                //this.targetLabyrinth.toObstacle(screenX, screenY, Hud.selectedObject);
+                this.targetLabyrinth.toObstacle(screenX, screenY, Hud.selectedObject);
+            } else if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)){
                 this.targetLabyrinth.toBuildableLocation(screenX, screenY);
             } else {
                 this.targetLabyrinth.toRoad(screenX, screenY);
             }
             return true;
         } else if (this.draggingButton == 1) { // Right click
-            this.targetLabyrinth.toWall(screenX, screenY);
+            if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
+                this.targetLabyrinth.toNotBuildableLocation(screenX, screenY);
+            } else {
+                this.targetLabyrinth.toWall(screenX, screenY);
+            }
             return true;
         }
 

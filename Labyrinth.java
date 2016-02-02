@@ -408,6 +408,14 @@ public class Labyrinth implements Json.Serializable {
         }
     }
 
+    public void toNotBuildableLocation(int x, int y) {
+        Node node = nodeAtPosition(x, y);
+
+        if (node != null) {
+            node.buildableLocation = false;
+        }
+    }
+
     public void toRoad(int x, int y) {
         Node node = nodeAtPosition(x, y);
 
