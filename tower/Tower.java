@@ -12,8 +12,9 @@ import com.badlogic.gdx.utils.Array;
 import fi.joutsijoki.AnimationBuilder;
 import fi.joutsijoki.AssetLoader;
 import fi.joutsijoki.AudioHandler;
+import fi.joutsijoki.Constant;
 import fi.joutsijoki.Effect;
-import fi.joutsijoki.Labyrinth;
+import fi.joutsijoki.GameField;
 import fi.joutsijoki.Utils;
 import fi.joutsijoki.enemy.Enemy;
 
@@ -67,7 +68,7 @@ public class Tower extends Sprite {
             case SHADOW_MAGE_IDLE:
                 this.humanoidTower = true;
                 this.towerType = TOWER_TYPE.SHADOW_MAGE;
-                this.attackAnimation = AnimationBuilder.buildAnimation(Labyrinth.assetLoader.getTowerTexture(AssetLoader.TOWER_TEXTURE.SHADOW_MAGE_ATTACK)
+                this.attackAnimation = AnimationBuilder.buildAnimation(GameField.assetLoader.getTowerTexture(AssetLoader.TOWER_TEXTURE.SHADOW_MAGE_ATTACK)
                         , 3
                         , 1
                         , (float)this.shotCooldown / 1000.0f);
@@ -76,7 +77,7 @@ public class Tower extends Sprite {
             case DWARF_IDLE:
                 this.humanoidTower = true;
                 this.towerType = TOWER_TYPE.DWARF;
-                this.attackAnimation = AnimationBuilder.buildAnimation(Labyrinth.assetLoader.getTowerTexture(AssetLoader.TOWER_TEXTURE.DWARF_ATTACK)
+                this.attackAnimation = AnimationBuilder.buildAnimation(GameField.assetLoader.getTowerTexture(AssetLoader.TOWER_TEXTURE.DWARF_ATTACK)
                         , 3
                         , 1
                         , (float)this.shotCooldown / 1000.0f);
@@ -232,7 +233,7 @@ public class Tower extends Sprite {
         }
         float distance = this.pos.dst(target.getPos());
 
-        if (distance > this.radius * Labyrinth.CELL_WIDTH || this.target.isAtEnd()) {
+        if (distance > this.radius * Constant.CELL_WIDTH || this.target.isAtEnd()) {
             setLockedAtTarget(false);
             return true;
         } else {
@@ -258,13 +259,13 @@ public class Tower extends Sprite {
     public Texture getTexture() {
         switch (towerType) {
             case SHADOW:
-                return Labyrinth.assetLoader.getTowerTexture(AssetLoader.TOWER_TEXTURE.SHADOW);
+                return GameField.assetLoader.getTowerTexture(AssetLoader.TOWER_TEXTURE.SHADOW);
             case LIGHTNING:
-                return Labyrinth.assetLoader.getTowerTexture(AssetLoader.TOWER_TEXTURE.LIGHTNING);
+                return GameField.assetLoader.getTowerTexture(AssetLoader.TOWER_TEXTURE.LIGHTNING);
             case ICE:
-                return Labyrinth.assetLoader.getTowerTexture(AssetLoader.TOWER_TEXTURE.ICE);
+                return GameField.assetLoader.getTowerTexture(AssetLoader.TOWER_TEXTURE.ICE);
             case POISON:
-                return Labyrinth.assetLoader.getTowerTexture(AssetLoader.TOWER_TEXTURE.POISON);
+                return GameField.assetLoader.getTowerTexture(AssetLoader.TOWER_TEXTURE.POISON);
         }
 
         return null;
@@ -293,10 +294,10 @@ public class Tower extends Sprite {
                 batch.draw(this.getHumanoidTowerTexture()
                         , fromVec.x
                         , fromVec.y
-                        , Labyrinth.CELL_WIDTH / 2
-                        , Labyrinth.CELL_HEIGHT / 2
-                        , Labyrinth.CELL_WIDTH
-                        , Labyrinth.CELL_HEIGHT
+                        , Constant.CELL_WIDTH / 2
+                        , Constant.CELL_HEIGHT / 2
+                        , Constant.CELL_WIDTH
+                        , Constant.CELL_HEIGHT
                         , 1
                         , 1
                         , this.getRotation()
@@ -305,23 +306,23 @@ public class Tower extends Sprite {
             } else {
                 batch.draw(this.getTexture()
                         , this.pos.x
-                        , this.pos.y + Labyrinth.CELL_HEIGHT
-                        , Labyrinth.CELL_WIDTH
-                        , Labyrinth.CELL_HEIGHT * -1);
+                        , this.pos.y + Constant.CELL_HEIGHT
+                        , Constant.CELL_WIDTH
+                        , Constant.CELL_HEIGHT * -1);
             }
         } else {
             if (this.isHumanoidTower()) {
                 batch.draw(this.getHumanoidTowerTexture()
                         , this.pos.x
-                        , this.pos.y + Labyrinth.CELL_HEIGHT
-                        , Labyrinth.CELL_WIDTH
-                        , Labyrinth.CELL_HEIGHT * -1);
+                        , this.pos.y + Constant.CELL_HEIGHT
+                        , Constant.CELL_WIDTH
+                        , Constant.CELL_HEIGHT * -1);
             } else {
                 batch.draw(this.getTexture()
                         , this.pos.x
-                        , this.pos.y + Labyrinth.CELL_HEIGHT
-                        , Labyrinth.CELL_WIDTH
-                        , Labyrinth.CELL_HEIGHT * -1);
+                        , this.pos.y + Constant.CELL_HEIGHT
+                        , Constant.CELL_WIDTH
+                        , Constant.CELL_HEIGHT * -1);
             }
         }
     }

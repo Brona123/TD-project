@@ -15,6 +15,7 @@ public abstract class Projectile {
     protected boolean hitTarget;
     protected Enemy target;
     protected int damage;
+    protected float delta = 0f;
 
     public Projectile() {}
 

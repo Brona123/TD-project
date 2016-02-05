@@ -22,11 +22,13 @@ import com.badlogic.gdx.utils.Array;
 
 import java.util.HashMap;
 
+import fi.joutsijoki.screens.Editor;
+
 /**
  * Created by Sami on 30.12.2015.
  */
-public class Hud {
-    private Main parent;
+public class EditorHud {
+    private Editor parent;
     private Stage holder;
     private TextButton exportButton;
     private TextButton loadButton;
@@ -38,7 +40,7 @@ public class Hud {
     private HashMap<String, AssetLoader.OBJECT_TEXTURE> objectNameMap;
     private HashMap<String, AssetLoader.TOWER_TEXTURE> towerNameMap;
 
-    public Hud(Main parent, Stage holder) {
+    public EditorHud(Editor parent, Stage holder) {
         this.parent = parent;
         this.holder = holder;
 
@@ -90,7 +92,7 @@ public class Hud {
                 BitmapFont font = new BitmapFont();
                 font.setColor(1f, 0.5f, 0f, 1f);
 
-                Window.WindowStyle windowStyle = new Window.WindowStyle(font, font.getColor(), newSpriteDrawable(Labyrinth.assetLoader.getHudTexture(AssetLoader.HUD_TEXTURE.DIALOG_BG)));
+                Window.WindowStyle windowStyle = new Window.WindowStyle(font, font.getColor(), Utils.newSpriteDrawable(GameField.assetLoader.getHudTexture(AssetLoader.HUD_TEXTURE.DIALOG_BG)));
                 final Dialog dialog = new Dialog("Load map", windowStyle);
 
                 for (FileHandle fh : files) {
@@ -125,7 +127,7 @@ public class Hud {
         });
 
         Table buttonTable = new Table();
-        buttonTable.setBackground(newSpriteDrawable(Labyrinth.assetLoader.getHudTexture(AssetLoader.HUD_TEXTURE.BORDER)));
+        buttonTable.setBackground(Utils.newSpriteDrawable(GameField.assetLoader.getHudTexture(AssetLoader.HUD_TEXTURE.BORDER)));
         buttonTable.setBounds(Gdx.graphics.getWidth() - 128, Gdx.graphics.getHeight() - 64 * 10, 128, 64 * 3);
         buttonTable.add(exportButton);
         buttonTable.row();
@@ -135,10 +137,6 @@ public class Hud {
         buttonTable.row();
 
         holder.addActor(buttonTable);
-    }
-
-    public SpriteDrawable newSpriteDrawable(Texture t) {
-        return new SpriteDrawable(new Sprite(t));
     }
 
     public void createImagePane(Stage stage) {
@@ -153,7 +151,7 @@ public class Hud {
         final Array<ImageButton> imageButtonList = new Array<ImageButton>();
 
         for (String key : objectNameMap.keySet()) {
-            ImageButton ib = buildImageButton(Labyrinth.assetLoader.getObstacleTexture(objectNameMap.get(key)), key);
+            ImageButton ib = buildImageButton(GameField.assetLoader.getObstacleTexture(objectNameMap.get(key)), key);
             imageButtonList.add(ib);
 
             t.add(ib);
@@ -176,7 +174,7 @@ public class Hud {
         Table container = new Table();
         container.setBounds(Gdx.graphics.getWidth() - 128, Gdx.graphics.getHeight() - 64 * 4, 128, 64 * 4);
         container.add(sp).fill();
-        container.setBackground(newSpriteDrawable(Labyrinth.assetLoader.getHudTexture(AssetLoader.HUD_TEXTURE.BORDER)));
+        container.setBackground(Utils.newSpriteDrawable(GameField.assetLoader.getHudTexture(AssetLoader.HUD_TEXTURE.BORDER)));
 
         stage.addActor(container);
     }
@@ -194,7 +192,7 @@ public class Hud {
         final Array<ImageButton> towerButtonList = new Array<ImageButton>();
 
         for (String key : towerNameMap.keySet()) {
-            ImageButton ib = buildImageButton(Labyrinth.assetLoader.getTowerTexture(towerNameMap.get(key)), key);
+            ImageButton ib = buildImageButton(GameField.assetLoader.getTowerTexture(towerNameMap.get(key)), key);
             towerButtonList.add(ib);
 
             t.add(ib);
@@ -217,14 +215,14 @@ public class Hud {
         Table container = new Table();
         container.setBounds(Gdx.graphics.getWidth() - 128, Gdx.graphics.getHeight() - 64 * 14, 128, 64 * 4);
         container.add(sp).fill();
-        container.setBackground(newSpriteDrawable(Labyrinth.assetLoader.getHudTexture(AssetLoader.HUD_TEXTURE.BORDER)));
+        container.setBackground(Utils.newSpriteDrawable(GameField.assetLoader.getHudTexture(AssetLoader.HUD_TEXTURE.BORDER)));
 
         stage.addActor(container);
     }
 
     private void createControlPane(Stage stage) {
-        SpriteDrawable checkboxOn = newSpriteDrawable(Labyrinth.assetLoader.getHudTexture(AssetLoader.HUD_TEXTURE.CHECKBOX_ON));
-        SpriteDrawable checkboxOff = newSpriteDrawable(Labyrinth.assetLoader.getHudTexture(AssetLoader.HUD_TEXTURE.CHECKBOX_OFF));
+        SpriteDrawable checkboxOn = Utils.newSpriteDrawable(GameField.assetLoader.getHudTexture(AssetLoader.HUD_TEXTURE.CHECKBOX_ON));
+        SpriteDrawable checkboxOff = Utils.newSpriteDrawable(GameField.assetLoader.getHudTexture(AssetLoader.HUD_TEXTURE.CHECKBOX_OFF));
         CheckBox.CheckBoxStyle style = new CheckBox.CheckBoxStyle(checkboxOff, checkboxOn, new BitmapFont(), Color.YELLOW);
 
         CheckBox gridCheckBox = new CheckBox("Display Grid", style);
@@ -232,7 +230,7 @@ public class Hud {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 System.out.println("EVENT: " + event);
-                Labyrinth.drawGrid = !Labyrinth.drawGrid;
+                GameField.drawGrid = !GameField.drawGrid;
             }
         });
 
@@ -240,7 +238,7 @@ public class Hud {
         connectionsCheckBox.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Labyrinth.drawConnections = !Labyrinth.drawConnections;
+                GameField.drawConnections = !GameField.drawConnections;
             }
         });
 
@@ -248,7 +246,7 @@ public class Hud {
         pathCheckBox.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Labyrinth.drawPaths = !Labyrinth.drawPaths;
+                GameField.drawPaths = !GameField.drawPaths;
             }
         });
 
@@ -256,13 +254,13 @@ public class Hud {
         objectCheckBox.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Labyrinth.drawObjects = !Labyrinth.drawObjects;
+                GameField.drawObjects = !GameField.drawObjects;
             }
         });
 
         Table controlPane = new Table();
         controlPane.setBounds(Gdx.graphics.getWidth() - 64 * 3, Gdx.graphics.getHeight() - 64 * 7, 64 * 3, 64 * 3);
-        controlPane.setBackground(newSpriteDrawable(Labyrinth.assetLoader.getHudTexture(AssetLoader.HUD_TEXTURE.BORDER)));
+        controlPane.setBackground(Utils.newSpriteDrawable(GameField.assetLoader.getHudTexture(AssetLoader.HUD_TEXTURE.BORDER)));
         controlPane.row();
         controlPane.add(gridCheckBox).left();
         controlPane.row();

@@ -80,7 +80,6 @@ public class LightningBolt {
         alpha = 1f;
         alphaMultiplier = 1;
         fadeOutRate = 0.03f;
-
     }
 
     public void draw(SpriteBatch spriteBatch) {

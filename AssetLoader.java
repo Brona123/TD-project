@@ -1,5 +1,6 @@
 package fi.joutsijoki;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
@@ -15,11 +16,12 @@ import java.util.Random;
 public class AssetLoader {
     private HashMap<OBJECT_TEXTURE, Texture> objectTextureMap;
     private HashMap<PATHFINDING_TEXTURE, Texture> pathfindingTextureMap;
-    private HashMap<HUD_TEXTURE, Texture> hudTextureMap;
+    private static HashMap<HUD_TEXTURE, Texture> hudTextureMap;
     private HashMap<ENEMY_TEXTURE, Texture> enemyTextureMap;
-    private HashMap<TOWER_TEXTURE, Texture> towerTextureMap;
+    private static HashMap<TOWER_TEXTURE, Texture> towerTextureMap;
     private HashMap<PROJECTILE_TEXTURE, Texture> projectileTextureMap;
     private HashMap<LEVEL_TEXTURE, Texture> levelTextureMap;
+    private static HashMap<MENU_TEXTURE, Texture> menuTextureMap;
 
     public static TextureRegion lightningLine;
     public static TextureRegion lightningHalfCircle;
@@ -32,6 +34,15 @@ public class AssetLoader {
     // Audio files
     public static Array<Sound> lightningEffects;
     public static Sound poisonEffect;
+
+    public static Texture targetLocation;
+
+    public enum MENU_TEXTURE {
+        PLAY,
+        EDITOR,
+        CAMPAIGN,
+        ENDLESS
+    }
 
     public enum LEVEL_TEXTURE {
         LEVEL_ONE
@@ -64,7 +75,12 @@ public class AssetLoader {
         CHECKBOX_ON,
         CHECKBOX_OFF,
         BORDER,
-        DIALOG_BG
+        DIALOG_BG,
+        GOLD,
+        SKULL,
+        STATUS_BAR,
+        TOWER_DESCRIPTION,
+        BUY_TOWER
     }
 
     public enum TOWER_TEXTURE {
@@ -87,6 +103,12 @@ public class AssetLoader {
     }
 
     public AssetLoader() {
+        if (Gdx.app.getType() == Application.ApplicationType.Android) {
+            Constant.ROOT_ASSET_FOLDER = "";
+        }
+
+        targetLocation = newTexture("target-location.png");
+
         // Object layer
         objectTextureMap = new HashMap<OBJECT_TEXTURE, Texture>();
         objectTextureMap.put(OBJECT_TEXTURE.BUSH, newTexture("bush.png"));
@@ -104,12 +126,18 @@ public class AssetLoader {
         pathfindingTextureMap.put(PATHFINDING_TEXTURE.PATH, newTexture("path.png"));
 
 
-        // Hud textures
+        // EditorHud textures
         hudTextureMap = new HashMap<HUD_TEXTURE, Texture>();
         hudTextureMap.put(HUD_TEXTURE.CHECKBOX_ON, newTexture("checkbox-on.png", "hud/"));
         hudTextureMap.put(HUD_TEXTURE.CHECKBOX_OFF, newTexture("checkbox-off.png", "hud/"));
         hudTextureMap.put(HUD_TEXTURE.BORDER, newTexture("border.png", "hud/"));
         hudTextureMap.put(HUD_TEXTURE.DIALOG_BG, newTexture("dialog-bg.png", "hud/"));
+        hudTextureMap.put(HUD_TEXTURE.GOLD, newTexture("gold.png", "hud/"));
+        hudTextureMap.put(HUD_TEXTURE.SKULL, newTexture("skull.png", "hud/"));
+        hudTextureMap.put(HUD_TEXTURE.STATUS_BAR, newTexture("status-bar.png", "hud/"));
+        hudTextureMap.put(HUD_TEXTURE.TOWER_DESCRIPTION, newTexture("tower-description.png", "hud/"));
+        hudTextureMap.put(HUD_TEXTURE.BUY_TOWER, newTexture("buy.png", "hud/"));
+
 
         // Enemy textures
         enemyTextureMap = new HashMap<ENEMY_TEXTURE, Texture>();
@@ -137,6 +165,12 @@ public class AssetLoader {
         projectileTextureMap.put(PROJECTILE_TEXTURE.SHADOW, newTexture("shadow-projectile.png", "projectiles/"));
         projectileTextureMap.put(PROJECTILE_TEXTURE.DWARF_HAMMER, newTexture("hammer.png", "projectiles/"));
 
+        menuTextureMap = new HashMap<MENU_TEXTURE, Texture>();
+        menuTextureMap.put(MENU_TEXTURE.PLAY, newTexture("play.png", "menus/"));
+        menuTextureMap.put(MENU_TEXTURE.EDITOR, newTexture("editor.png", "menus/"));
+        menuTextureMap.put(MENU_TEXTURE.CAMPAIGN, newTexture("campaign.png", "menus/"));
+        menuTextureMap.put(MENU_TEXTURE.ENDLESS, newTexture("endless.png", "menus/"));
+
         // Level textures
         levelTextureMap = new HashMap<LEVEL_TEXTURE, Texture>();
         levelTextureMap.put(LEVEL_TEXTURE.LEVEL_ONE, newTexture("level-1.png", "levels/"));
@@ -155,6 +189,10 @@ public class AssetLoader {
         lightningEffects.add(newSound("lightning-3.wav", "audio/effects/"));
         //lightningEffects.add(newSound("lightning-4.wav", "audio/effects/"));
         poisonEffect = newSound("poison.wav", "audio/effects/");
+    }
+
+    public static Texture getMenuTexture(MENU_TEXTURE texture) {
+        return menuTextureMap.get(texture);
     }
 
     public Texture getCurrentLevelBackground(String levelUrl) {
@@ -186,7 +224,7 @@ public class AssetLoader {
         return objectTextureMap.get(object);
     }
 
-    public Texture getTowerTexture(TOWER_TEXTURE tower) {
+    public static Texture getTowerTexture(TOWER_TEXTURE tower) {
         return towerTextureMap.get(tower);
     }
 
@@ -198,7 +236,7 @@ public class AssetLoader {
         return pathfindingTextureMap.get(pathfindingTexture);
     }
 
-    public Texture getHudTexture(HUD_TEXTURE hudTexture) {
+    public static Texture getHudTexture(HUD_TEXTURE hudTexture) {
         return hudTextureMap.get(hudTexture);
     }
 

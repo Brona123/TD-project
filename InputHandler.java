@@ -8,11 +8,11 @@ import com.badlogic.gdx.InputProcessor;
  * Created by Sami on 30.12.2015.
  */
 public class InputHandler implements InputProcessor {
-    private Labyrinth targetLabyrinth;
+    private GameField targetGameField;
     private int draggingButton = -1;
 
-    public InputHandler(Labyrinth labyrinth) {
-        this.targetLabyrinth = labyrinth;
+    public InputHandler(GameField gameField) {
+        this.targetGameField = gameField;
     }
 
     @Override
@@ -36,30 +36,30 @@ public class InputHandler implements InputProcessor {
 
         if (button == 0) { // Left click
             if (Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT)) {
-                this.targetLabyrinth.toObstacle(screenX, screenY, Hud.selectedObject);
+                this.targetGameField.toObstacle(screenX, screenY, EditorHud.selectedObject);
             } else if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)){
-                this.targetLabyrinth.toBuildableLocation(screenX, screenY);
+                this.targetGameField.toBuildableLocation(screenX, screenY);
             } else {
-                this.targetLabyrinth.toRoad(screenX, screenY);
+                this.targetGameField.toRoad(screenX, screenY);
             }
             return true;
         } else if (button == 1) { // Right click
             if (Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT)) {
-                this.targetLabyrinth.toTower(screenX, screenY, Hud.selectedTower);
+                this.targetGameField.toTower(screenX, screenY, EditorHud.selectedTower);
             } else if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)){
-                this.targetLabyrinth.toNotBuildableLocation(screenX, screenY);
+                this.targetGameField.toNotBuildableLocation(screenX, screenY);
             } else {
-                this.targetLabyrinth.toWall(screenX, screenY);
+                this.targetGameField.toWall(screenX, screenY);
             }
             return true;
         } else if (button == 2){
-            this.targetLabyrinth.clearPaths();
+            this.targetGameField.clearPaths();
             return true;
         } else if (button == 3) {
-            this.targetLabyrinth.beginPath(screenX, screenY);
+            this.targetGameField.beginPath(screenX, screenY);
             return true;
         } else if (button == 4) {
-            this.targetLabyrinth.findPath(screenX, screenY);
+            this.targetGameField.findPath(screenX, screenY);
             return true;
         }
         return false;
@@ -76,18 +76,18 @@ public class InputHandler implements InputProcessor {
 
         if (this.draggingButton == 0) { // Left click
             if (Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT)) {
-                this.targetLabyrinth.toObstacle(screenX, screenY, Hud.selectedObject);
+                this.targetGameField.toObstacle(screenX, screenY, EditorHud.selectedObject);
             } else if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)){
-                this.targetLabyrinth.toBuildableLocation(screenX, screenY);
+                this.targetGameField.toBuildableLocation(screenX, screenY);
             } else {
-                this.targetLabyrinth.toRoad(screenX, screenY);
+                this.targetGameField.toRoad(screenX, screenY);
             }
             return true;
         } else if (this.draggingButton == 1) { // Right click
             if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
-                this.targetLabyrinth.toNotBuildableLocation(screenX, screenY);
+                this.targetGameField.toNotBuildableLocation(screenX, screenY);
             } else {
-                this.targetLabyrinth.toWall(screenX, screenY);
+                this.targetGameField.toWall(screenX, screenY);
             }
             return true;
         }
@@ -102,10 +102,11 @@ public class InputHandler implements InputProcessor {
 
     @Override
     public boolean scrolled(int amount) {
+        System.out.println("SCROLLED AMOUNT: " + amount);
         return false;
     }
 
-    public void setLab(Labyrinth lab) {
-        this.targetLabyrinth = lab;
+    public void setLab(GameField lab) {
+        this.targetGameField = lab;
     }
 }

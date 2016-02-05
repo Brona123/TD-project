@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import fi.joutsijoki.AssetLoader;
-import fi.joutsijoki.Labyrinth;
+import fi.joutsijoki.GameField;
 import fi.joutsijoki.Utils;
 import fi.joutsijoki.enemy.Enemy;
 
@@ -15,8 +15,9 @@ import fi.joutsijoki.enemy.Enemy;
 public class HammerProjectile extends Projectile {
     private float angle = 0f;
     private TextureRegion texture;
-    private int textureWidth = 6;
-    private int textureHeight = 6;
+    private int textureWidth = 16;
+    private int textureHeight = 16;
+    private float speed = 0.05f;
 
     public HammerProjectile(Vector2 fromVec, Enemy target, int damage) {
         this.pos = fromVec;
@@ -25,7 +26,7 @@ public class HammerProjectile extends Projectile {
         this.toVec = new Vector2(targetPos.x - textureWidth / 2, targetPos.y + textureHeight / 2);
         this.target = target;
         this.damage = damage;
-        this.texture = new TextureRegion(Labyrinth.assetLoader.getProjectileTexture(AssetLoader.PROJECTILE_TEXTURE.DWARF_HAMMER));
+        this.texture = new TextureRegion(GameField.assetLoader.getProjectileTexture(AssetLoader.PROJECTILE_TEXTURE.DWARF_HAMMER));
     }
 
     @Override
@@ -36,17 +37,20 @@ public class HammerProjectile extends Projectile {
             this.hitTarget = true;
             this.target.damage(this.damage);
         } else {
-            this.fromVec.lerp(this.toVec, 0.1f);
+            this.delta += this.speed;
+            this.fromVec.lerp(this.toVec, this.delta);
         }
     }
+
+    // TODO Mobiili port
 
     @Override
     public void draw(SpriteBatch batch) {
         batch.draw(this.texture
                 , this.fromVec.x
                 , this.fromVec.y
-                , 4
-                , 4
+                , 8
+                , 8
                 , this.textureWidth
                 , this.textureHeight
                 , 1
@@ -55,30 +59,10 @@ public class HammerProjectile extends Projectile {
     }
 
     public boolean isAtTarget(Vector2 v) {
-        /*
-        Rectangle r = new Rectangle(this.pos.x, this.pos.y, this.textureWidth, this.textureHeight);
-
-        Vector2 targetPos = this.target.getPos();
-        Rectangle r2 = new Rectangle(targetPos.x, targetPos.y, Labyrinth.CELL_WIDTH, Labyrinth.CELL_HEIGHT);
-
-        if (r.overlaps(r2)) {
+        if (this.delta >= 1f) {
             return true;
         } else {
             return false;
         }
-        */
-
-
-        if (v.x + 0.5f >= pos.x
-                && v.x - 0.5f <= pos.x
-                && v.y + 0.5f >= pos.y
-                && v.y - 0.5f <= pos.y) {
-            return true;
-        } else {
-            return false;
-        }
-
-
-
     }
 }

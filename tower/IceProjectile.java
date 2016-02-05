@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 import fi.joutsijoki.AssetLoader;
-import fi.joutsijoki.Labyrinth;
+import fi.joutsijoki.GameField;
 import fi.joutsijoki.Utils;
 import fi.joutsijoki.enemy.Enemy;
 
@@ -23,7 +23,7 @@ public class IceProjectile extends Projectile {
 
     @Override
     public void draw(SpriteBatch batch) {
-        batch.draw(Labyrinth.assetLoader.getProjectileTexture(AssetLoader.PROJECTILE_TEXTURE.ICE)
+        batch.draw(GameField.assetLoader.getProjectileTexture(AssetLoader.PROJECTILE_TEXTURE.ICE)
                 , this.fromVec.x
                 , this.fromVec.y
                 , 20

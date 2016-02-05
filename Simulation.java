@@ -15,14 +15,14 @@ import fi.joutsijoki.tower.Tower;
  * Created by Sami on 12.1.2016.
  */
 public class Simulation {
-    private Labyrinth lab;
+    private GameField lab;
     private PathHandler pathHandler;
     private Array<Enemy> mobList;
     private Array<Tower> towerList;
     private final int SPAWN_INTERVAL_MS = 1000;
     private Level currentLevel;
 
-    public void setLabyrinth(Labyrinth lab) {
+    public void setLabyrinth(GameField lab) {
         this.lab = lab;
     }
 
@@ -182,7 +182,7 @@ public class Simulation {
             for (Enemy e : mobList) {
                 float distance = Utils.centerPos(t.getPos()).dst(Utils.centerPos(e.getPos()));
 
-                if (distance < t.getRadius() * Labyrinth.CELL_WIDTH) {
+                if (distance < t.getRadius() * Constant.CELL_WIDTH) {
                     if (t.isLockedAtTarget() && !t.isTargetDead()) {
                         t.shoot();
                     } else {

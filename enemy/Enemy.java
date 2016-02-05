@@ -9,10 +9,13 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
+import fi.joutsijoki.AnimationBuilder;
+import fi.joutsijoki.Constant;
 import fi.joutsijoki.Effect;
-import fi.joutsijoki.Labyrinth;
+import fi.joutsijoki.GameField;
 import fi.joutsijoki.pathfinding.GraphPathImpl;
 import fi.joutsijoki.pathfinding.Node;
+import fi.joutsijoki.screens.GameScreen;
 
 /**
  * Created by Sami on 21.1.2016.
@@ -36,8 +39,37 @@ public class Enemy extends Sprite {
     protected TextureRegion currentTexture;
     protected float stateTime;
     protected int bounty;
+    protected boolean initialRotationSet = false;
+    protected GameScreen parent;
 
     public Enemy() {
+        init();
+    }
+
+    public Enemy(Texture t, int health, float x, float y, int bounty) {
+        init();
+        this.texture = t;
+        this.walkAnimation = AnimationBuilder.buildAnimation(t, 3, 1, 0.2f);
+        this.walkAnimation.setPlayMode(Animation.PlayMode.LOOP_PINGPONG);
+        this.maxHealth = health;
+        this.currentHealth = maxHealth;
+        this.position = new Vector2(x, y);
+        this.bounty = bounty;
+    }
+
+    public Enemy(Texture t, int health, float x, float y, int bounty, GameScreen parent) {
+        init();
+        this.texture = t;
+        this.walkAnimation = AnimationBuilder.buildAnimation(t, 3, 1, 0.2f);
+        this.walkAnimation.setPlayMode(Animation.PlayMode.LOOP_PINGPONG);
+        this.maxHealth = health;
+        this.currentHealth = maxHealth;
+        this.position = new Vector2(x, y);
+        this.bounty = bounty;
+        this.parent = parent;
+    }
+
+    private void init() {
         healthBar = new HealthBar();
         effects = new Array<Effect>();
     }
@@ -47,39 +79,52 @@ public class Enemy extends Sprite {
 
         if (this.currentHealth < 0) {
             this.alive = false;
-            Labyrinth.money += this.bounty;
-            System.out.println("CURRENT MONEY: " + Labyrinth.money);
-
+            this.parent.increaseMoney(this.bounty);
+            System.out.println("CURRENT MONEY: " + GameField.money);
         }
     }
 
     public void update() {
-
-        if (this.nextNodeIndex >= this.path.getCount()) {
-            this.atEnd = true;
-            return;
-        }
-
-        if (this.isAtNode(this.nextNode)) {
-
+        // Travelled to next node
+        if (this.delta >= 1f) {
             this.currentNode = this.nextNode;
             this.nextNode = this.path.get(nextNodeIndex);
             this.nextNodeIndex++;
             this.delta = 0f;
 
-            double atan = Math.atan2(this.nextNode.y - this.currentNode.y, this.nextNode.x - this.currentNode.x);
-            double angle = atan * (180 / Math.PI);
-            this.setRotation((float)angle);
+            rotateToNextNode();
         }
 
+        // Tick all effects
         for (int i = 0; i < this.effects.size; i++) {
             this.effects.get(i).tick(this);
         }
 
+        // Move the enemy according to speed
+        move();
+
+        // Enemy is at the end of the road
+        if (this.nextNodeIndex >= this.path.getCount() && this.delta >= 1f) {
+            this.atEnd = true;
+        }
+
+        if (!initialRotationSet) {
+            rotateToNextNode();
+            initialRotationSet = true;
+        }
+    }
+
+    private void move() {
         this.delta += this.speed;
         Vector2 currentVec = new Vector2(this.currentNode.x, this.currentNode.y);
         Vector2 vec = currentVec.lerp(new Vector2(this.nextNode.x, this.nextNode.y), this.delta);
         this.position = vec;
+    }
+
+    private void rotateToNextNode() {
+        double atan = Math.atan2(this.nextNode.y - this.currentNode.y, this.nextNode.x - this.currentNode.x);
+        double angle = atan * (180 / Math.PI);
+        this.setRotation((float)angle);
     }
 
     public void draw(SpriteBatch batch) {
@@ -89,10 +134,10 @@ public class Enemy extends Sprite {
         batch.draw(this.currentTexture
                 , this.position.x
                 , this.position.y
-                , Labyrinth.CELL_WIDTH / 2
-                , Labyrinth.CELL_HEIGHT / 2
-                , Labyrinth.CELL_WIDTH
-                , Labyrinth.CELL_HEIGHT
+                , Constant.CELL_WIDTH / 2
+                , Constant.CELL_HEIGHT / 2
+                , Constant.CELL_WIDTH
+                , Constant.CELL_HEIGHT
                 , 1
                 , 1
                 , this.getRotation()
@@ -101,27 +146,23 @@ public class Enemy extends Sprite {
         for (Effect e : this.effects) {
             e.draw(batch
                     , this.position.x
-                    , this.position.y + Labyrinth.CELL_HEIGHT
-                    , Labyrinth.CELL_WIDTH
-                    , flip(Labyrinth.CELL_HEIGHT));
+                    , this.position.y + Constant.CELL_HEIGHT
+                    , Constant.CELL_WIDTH
+                    , flip(Constant.CELL_HEIGHT));
         }
 
         this.healthBar.draw(batch, this.position, (float)this.currentHealth / (float)this.maxHealth);
     }
 
-    public int flip(int toFlip) {
-        return toFlip * -1;
+    public void setPath(GraphPathImpl path) {
+        this.path = path;
+        this.currentNode = path.get(0);
+        this.nextNode = path.get(1);
+        this.nextNodeIndex = 2;
     }
 
-    public boolean isAtNode(Node n) {
-        if (n.x + 0.5f >= position.x
-                && n.x - 0.5f <= position.x
-                && n.y + 0.5f >= position.y
-                && n.y - 0.5f <= position.y) {
-            return true;
-        } else {
-            return false;
-        }
+    public int flip(int toFlip) {
+        return toFlip * -1;
     }
 
     public void setEffect(Effect.TYPE type) {

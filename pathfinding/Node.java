@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 
 import fi.joutsijoki.AssetLoader;
-import fi.joutsijoki.Labyrinth;
+import fi.joutsijoki.GameField;
 import fi.joutsijoki.tower.Tower;
 
 /**
@@ -55,7 +55,7 @@ public class Node implements IndexedNode<Node>, Json.Serializable {
     }
 
     public void createConnection(Node toNode, float cost) {
-        if (this.type == Labyrinth.WALL || toNode.type == Labyrinth.WALL) {
+        if (this.type == GameField.WALL || toNode.type == GameField.WALL) {
             // No connections to walls
         } else {
             connections.add(new ConnectionImpl(this, toNode, cost));

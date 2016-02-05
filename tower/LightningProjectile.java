@@ -1,5 +1,6 @@
 package fi.joutsijoki.tower;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
@@ -18,7 +19,7 @@ public class LightningProjectile extends Projectile {
 
     public LightningProjectile(Vector2 fromVec, Enemy target, int damage, int shotCooldown) {
         super(fromVec, Utils.centerPos(target.getPos()), target, damage);
-        this.lightningBolt = new LightningBolt(fromVec, Utils.centerPos(target.getPos()));
+        this.lightningBolt = new LightningBolt(fromVec, Utils.centerPos(target.getPos()), Color.PURPLE);
         this.cooldown = shotCooldown;
     }
 

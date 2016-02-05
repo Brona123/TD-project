@@ -33,6 +33,8 @@ public class Line {
         Color prevColor = spriteBatch.getColor();
         spriteBatch.setColor(color);
 
+        int srcFunc = spriteBatch.getBlendSrcFunc();
+        int dstFunc = spriteBatch.getBlendDstFunc();
         spriteBatch.setBlendFunction(spriteBatch.getBlendSrcFunc(), Pixmap.Blending.SourceOver.ordinal());
 
         spriteBatch.draw(AssetLoader.lightningLine, a.x, a.y, 0, thickness / 2, getLength(), thickness, 1, 1, theta);
@@ -40,6 +42,7 @@ public class Line {
         spriteBatch.draw(AssetLoader.lightningHalfCircle, b.x, b.y, 0, thickness / 2, thicknessScale * AssetLoader.lightningHalfCircle.getRegionWidth(), thickness, 1, 1, theta);
 
         spriteBatch.setColor(prevColor);
+        spriteBatch.setBlendFunction(srcFunc, dstFunc);
     }
 
     public float getLength(){

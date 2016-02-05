@@ -19,13 +19,13 @@ public class Level {
         if (number == 1) {
             waveArray = new Array<Wave>();
 
-            this.backgroundTexture = Labyrinth.assetLoader.getLevelTexture(AssetLoader.LEVEL_TEXTURE.LEVEL_ONE);
+            this.backgroundTexture = GameField.assetLoader.getLevelTexture(AssetLoader.LEVEL_TEXTURE.LEVEL_ONE);
 
-            waveArray.add(new Wave(5, new Mob(Labyrinth.assetLoader.getEnemyTexture(AssetLoader.ENEMY_TEXTURE.MOB), 50, 0, 0, 5)));
-            waveArray.add(new Wave(10, new Mob(Labyrinth.assetLoader.getEnemyTexture(AssetLoader.ENEMY_TEXTURE.MOB), 70, 0, 0, 7)));
-            waveArray.add(new Wave(15, new Mob(Labyrinth.assetLoader.getEnemyTexture(AssetLoader.ENEMY_TEXTURE.MOB), 90, 0, 0, 9)));
-            waveArray.add(new Wave(25, new Mob(Labyrinth.assetLoader.getEnemyTexture(AssetLoader.ENEMY_TEXTURE.MOB), 110, 0, 0, 11)));
-            waveArray.add(new Wave(30, new Rat(Labyrinth.assetLoader.getEnemyTexture(AssetLoader.ENEMY_TEXTURE.RAT), 130, 0, 0, 13)));
+            waveArray.add(new Wave(5, new Mob(GameField.assetLoader.getEnemyTexture(AssetLoader.ENEMY_TEXTURE.MOB), 50, 0, 0, 5)));
+            waveArray.add(new Wave(10, new Mob(GameField.assetLoader.getEnemyTexture(AssetLoader.ENEMY_TEXTURE.MOB), 70, 0, 0, 7)));
+            waveArray.add(new Wave(15, new Mob(GameField.assetLoader.getEnemyTexture(AssetLoader.ENEMY_TEXTURE.MOB), 90, 0, 0, 9)));
+            waveArray.add(new Wave(25, new Mob(GameField.assetLoader.getEnemyTexture(AssetLoader.ENEMY_TEXTURE.MOB), 110, 0, 0, 11)));
+            waveArray.add(new Wave(30, new Rat(GameField.assetLoader.getEnemyTexture(AssetLoader.ENEMY_TEXTURE.RAT), 130, 0, 0, 13)));
 
             currentWaveIndex = 1;
         }

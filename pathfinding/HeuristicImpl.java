@@ -2,7 +2,7 @@ package fi.joutsijoki.pathfinding;
 
 import com.badlogic.gdx.ai.pfa.Heuristic;
 
-import fi.joutsijoki.Labyrinth;
+import fi.joutsijoki.Constant;
 
 /**
  * Created by Sami on 31.12.2015.
@@ -14,11 +14,11 @@ public class HeuristicImpl implements Heuristic<Node> {
         int startIndex = startNode.getIndex();
         int endIndex = endNode.getIndex();
 
-        int startY = startIndex / Labyrinth.CELL_WIDTH;
-        int startX = startIndex % Labyrinth.CELL_WIDTH;
+        int startY = startIndex / Constant.CELL_WIDTH;
+        int startX = startIndex % Constant.CELL_WIDTH;
 
-        int endY = endIndex / Labyrinth.CELL_WIDTH;
-        int endX = endIndex % Labyrinth.CELL_WIDTH;
+        int endY = endIndex / Constant.CELL_WIDTH;
+        int endX = endIndex % Constant.CELL_WIDTH;
 
         return Math.abs(startX - endX) + Math.abs(startY - endY);
     }
