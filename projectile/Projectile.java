@@ -1,4 +1,4 @@
-package fi.joutsijoki.tower;
+package fi.joutsijoki.projectile;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -32,5 +32,9 @@ public abstract class Projectile {
 
     public boolean hitTarget() {
         return this.hitTarget;
+    }
+
+    public Enemy getTarget() {
+        return this.target;
     }
 }

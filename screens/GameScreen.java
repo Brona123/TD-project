@@ -19,7 +19,6 @@ import fi.joutsijoki.PathHandler;
 import fi.joutsijoki.TowerStatistics;
 import fi.joutsijoki.Utils;
 import fi.joutsijoki.enemy.Enemy;
-import fi.joutsijoki.enemy.Mob;
 import fi.joutsijoki.game.GameHud;
 import fi.joutsijoki.game.GameInputHandler;
 import fi.joutsijoki.pathfinding.GraphPathImpl;
@@ -42,13 +41,16 @@ public class GameScreen implements Screen {
     private Array<Enemy> enemyList;
     private Array<Tower> towerList;
     private final int SPAWN_INTERVAL_MS = 1000;
-    private final int PEACE_TIME = 5000;
+    private final int PEACE_TIME = 10000;
+    private float peaceTimePassed;
 
     private int money = 200;
     private int currentWave = 0;
     private int currentHealth = 30;
 
     private ShapeRenderer debugRenderer;
+    private Level currentLevel;
+    private int levelIndex = 1;
 
     public GameScreen(Main parent) {
         this.parent = parent;
@@ -62,11 +64,18 @@ public class GameScreen implements Screen {
 
         debugRenderer = new ShapeRenderer();
 
-        Constant.setDimensions(Gdx.graphics.getWidth() - Gdx.graphics.getWidth() / 6, Gdx.graphics.getHeight());
+        //Constant.setDimensions(Gdx.graphics.getWidth() - Gdx.graphics.getWidth() / 8, Gdx.graphics.getHeight());
         fileHandler = new FileHandler();
-        gameField = fileHandler.loadMap("level-one-farmland.json");
 
         gameHud = new GameHud(this);
+
+        initLevel(levelIndex);
+    }
+
+    private void initLevel(int level) {
+        this.currentLevel = new Level(level);
+
+        gameField = fileHandler.loadMap(this.currentLevel.getCurrentLevelMap());
 
         inputHandler = new GameInputHandler(this, gameField, gameHud);
 
@@ -114,8 +123,7 @@ public class GameScreen implements Screen {
             }
         }
 
-        Level level = new Level(1);
-        startLevelThread(level, paths);
+        startLevelThread(this.currentLevel, paths);
     }
 
     private void startLevelThread(final Level level, final Array<GraphPathImpl> paths) {
@@ -124,23 +132,41 @@ public class GameScreen implements Screen {
         Thread levelThread = new Thread(new Runnable() {
             @Override
             public void run() {
+                waitForPeaceTime();
 
                 while(!level.isLevelComplete()) {
                     spawnWave(level, paths);
                     level.setCurrentWaveIndex(level.getCurrentWaveIndex() + 1);
+                    currentWave = level.getCurrentWaveIndex();
+
                     System.out.println("WAVE FINISHED");
 
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    waitForPeaceTime();
                 }
 
                 System.out.println("LEVEL FINISHED");
+                money += 200;
+                levelIndex++;
+
+                Gdx.app.postRunnable(new Runnable() {
+                    @Override
+                    public void run() {
+                        initLevel(levelIndex);
+                    }
+                });
             }
         });
         levelThread.start();
+    }
+
+    private void waitForPeaceTime() {
+        long startTime = System.currentTimeMillis();
+
+        while(!(peaceTimePassed > PEACE_TIME)) {
+            this.peaceTimePassed = System.currentTimeMillis() - startTime;
+        }
+
+        peaceTimePassed = 0;
     }
 
     private void spawnWave(final Level level, final Array<GraphPathImpl> paths) {
@@ -279,7 +305,12 @@ public class GameScreen implements Screen {
 
         // Draw the status (health left, current wave etc)
         batch.begin();
-        this.gameHud.drawStatus(batch, this.currentHealth, this.money, 15, 30, 3);
+        this.gameHud.drawStatus(batch
+                , this.currentHealth
+                , this.money
+                , this.currentWave
+                , this.currentLevel.getWaveArr().size
+                , (int)((PEACE_TIME - this.peaceTimePassed) / 1000));
         this.gameHud.drawTowerDescriptions(batch);
         batch.end();
 

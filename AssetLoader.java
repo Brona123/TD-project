@@ -17,7 +17,7 @@ public class AssetLoader {
     private HashMap<OBJECT_TEXTURE, Texture> objectTextureMap;
     private HashMap<PATHFINDING_TEXTURE, Texture> pathfindingTextureMap;
     private static HashMap<HUD_TEXTURE, Texture> hudTextureMap;
-    private HashMap<ENEMY_TEXTURE, Texture> enemyTextureMap;
+    private static HashMap<ENEMY_TEXTURE, Texture> enemyTextureMap;
     private static HashMap<TOWER_TEXTURE, Texture> towerTextureMap;
     private HashMap<PROJECTILE_TEXTURE, Texture> projectileTextureMap;
     private HashMap<LEVEL_TEXTURE, Texture> levelTextureMap;
@@ -245,7 +245,7 @@ public class AssetLoader {
         return enemyTextureMap.get(ENEMY_TEXTURE.values()[random.nextInt(ENEMY_TEXTURE.values().length)]);
     }
 
-    public Texture getEnemyTexture(ENEMY_TEXTURE enemyTexture) {
+    public static Texture getEnemyTexture(ENEMY_TEXTURE enemyTexture) {
         return enemyTextureMap.get(enemyTexture);
     }
 }

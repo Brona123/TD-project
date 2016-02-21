@@ -8,17 +8,17 @@ public class TowerStatistics {
     public static Statistic getStatisticsObject(AssetLoader.TOWER_TEXTURE texture) {
         switch (texture) {
             case SHADOW:
-                return new Statistic(20, 5, 4, 500);
+                return new Statistic(80, 5, 4, 500);
             case LIGHTNING:
-                return new Statistic(60, 10, 6, 2000);
+                return new Statistic(100, 30, 6, 2000);
             case ICE:
-                return new Statistic(40, 3, 3, 1000);
+                return new Statistic(80, 3, 3, 1000);
             case POISON:
-                return new Statistic(100, 3, 5, 1500);
+                return new Statistic(150, 3, 5, 1500);
             case SHADOW_MAGE_IDLE:
-                return new Statistic(80, 10, 5, 50);
+                return new Statistic(50, 10, 5, 50);
             case DWARF_IDLE:
-                return new Statistic(200, 20, 10, 200);
+                return new Statistic(60, 20, 10, 200);
             default:
                 return null;
         }

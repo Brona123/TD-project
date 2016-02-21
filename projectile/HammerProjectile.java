@@ -1,4 +1,4 @@
-package fi.joutsijoki.tower;
+package fi.joutsijoki.projectile;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -12,7 +12,7 @@ import fi.joutsijoki.enemy.Enemy;
 /**
  * Created by Sami on 28.1.2016.
  */
-public class HammerProjectile extends Projectile {
+public class HammerProjectile extends fi.joutsijoki.projectile.Projectile {
     private float angle = 0f;
     private TextureRegion texture;
     private int textureWidth = 16;
@@ -41,8 +41,6 @@ public class HammerProjectile extends Projectile {
             this.fromVec.lerp(this.toVec, this.delta);
         }
     }
-
-    // TODO Mobiili port
 
     @Override
     public void draw(SpriteBatch batch) {

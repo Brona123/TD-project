@@ -1,5 +1,6 @@
 package fi.joutsijoki;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.pfa.Connection;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import fi.joutsijoki.pathfinding.GraphImpl;
 import fi.joutsijoki.pathfinding.GraphPathImpl;
 import fi.joutsijoki.pathfinding.Node;
+import fi.joutsijoki.tower.HumanoidTower;
 import fi.joutsijoki.tower.Tower;
 
 /**
@@ -65,7 +67,19 @@ public class GameField implements Json.Serializable {
     }
 
     private void init(Array<Node> nodes) {
-        this.nodes = nodes;
+        Array<Node> tmpNodeArr = new Array<Node>();
+
+        for (int i = 0; i < Constant.MAP_HEIGHT; i++) {
+            for (int j = 0; j < Constant.MAP_WIDTH; j++) {
+                Node node = new Node(nodes.get(Constant.MAP_WIDTH * i + j)
+                        , j * Constant.CELL_WIDTH + Constant.MAP_OFFSET_X
+                        , i * Constant.CELL_HEIGHT + Constant.MAP_OFFSET_Y);
+
+                tmpNodeArr.add(node);
+            }
+        }
+
+        this.nodes = tmpNodeArr;
 
         for (int i = 0; i < Constant.MAP_HEIGHT; i++) {
             for (int j = 0; j < Constant.MAP_WIDTH; j++) {
@@ -319,8 +333,9 @@ public class GameField implements Json.Serializable {
     }
 
     public void drawTower(SpriteBatch batch, Tower t, int i, int j) {
-        if (t.isHumanoidTower()) {
-            batch.draw(t.getHumanoidTowerTexture()
+        if (t.getClass() == HumanoidTower.class) {
+            HumanoidTower ht = (HumanoidTower) t;
+            batch.draw(ht.getHumanoidTexture()
                     , j * Constant.CELL_WIDTH + Constant.MAP_OFFSET_X
                     , i * Constant.CELL_HEIGHT + Constant.MAP_OFFSET_Y + Constant.CELL_HEIGHT
                     , Constant.CELL_WIDTH
@@ -484,29 +499,37 @@ public class GameField implements Json.Serializable {
         node.tower = selectedTower;
 
         TowerStatistics.Statistic statistics = TowerStatistics.getStatisticsObject(selectedTower);
-        node.towerRef = new Tower(statistics.damage, statistics.radius, statistics.cooldown, (int)node.x, (int)node.y, selectedTower);
+        node.towerRef = Tower.createTower(statistics.damage, statistics.radius, statistics.cooldown, (int)node.x, (int)node.y, selectedTower);
     }
 
     public void toSelectedLocation(int x, int y) {
-        this.selectedLocation = nodeAtPosition(x, y);
+        Node n = nodeAtPosition(x, y);
+
+        if (n != null) {
+            if (n.buildableLocation) {
+                this.selectedLocation = n;
+            } else {
+                System.out.println("INVALID LOCATION");
+            }
+        } else {
+            System.out.println("NO NODE AT THIS POSITION");
+        }
     }
 
     public Tower buildTower(int x, int y, AssetLoader.TOWER_TEXTURE selectedTower) {
         Node node = nodeAtPosition(x, y);
 
         TowerStatistics.Statistic statistics = TowerStatistics.getStatisticsObject(selectedTower);
-        return new Tower(statistics.damage, statistics.radius, statistics.cooldown, (int)node.x, (int)node.y, selectedTower);
+        return Tower.createTower(statistics.damage, statistics.radius, statistics.cooldown, (int)node.x, (int)node.y, selectedTower);
     }
 
     public Tower buildTower(AssetLoader.TOWER_TEXTURE selectedTower, TowerStatistics.Statistic statistic) {
         if (this.selectedLocation != null) {
-            return new Tower(statistic.damage, statistic.radius, statistic.cooldown, (int)this.selectedLocation.x, (int)this.selectedLocation.y, selectedTower);
+            return Tower.createTower(statistic.damage, statistic.radius, statistic.cooldown, (int)this.selectedLocation.x, (int)this.selectedLocation.y, selectedTower);
         } else {
             return null;
         }
     }
-
-    // TODO node size kusee mobiililla
 
     public void toWall(int x, int y) {
         Node node = nodeAtPosition(x, y);
@@ -607,11 +630,11 @@ public class GameField implements Json.Serializable {
         Constant.MAP_WIDTH = jsonData.getInt("width-cells");
         Constant.MAP_HEIGHT = jsonData.getInt("height-cells");
         JsonValue nodeArray = jsonData.get("nodes");
+        Constant.setDimensions(Gdx.graphics.getWidth() - Gdx.graphics.getWidth() / 7, Gdx.graphics.getHeight());
 
         Array<Node> serializedNodes = new Array<Node>();
 
         for (JsonValue node : nodeArray.iterator()) {
-            System.out.println(node);
             serializedNodes.add(json.readValue(Node.class, node));
         }
 

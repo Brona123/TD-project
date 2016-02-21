@@ -74,6 +74,7 @@ public class GameHud {
 
         Table towerDescriptionTable = createTowerDescriptionTable(Gdx.graphics.getHeight() - (statusTableHeight + menuContainer.getHeight()));
 
+        Table buyTowerContainer = new Table();
         ImageButton buyTowerButton = new ImageButton(Utils.newSpriteDrawable(AssetLoader.getHudTexture(AssetLoader.HUD_TEXTURE.BUY_TOWER)));
         buyTowerButton.addListener(new ChangeListener() {
             @Override
@@ -82,12 +83,25 @@ public class GameHud {
                 buyTower();
             }
         });
-        buyTowerButton.setBounds(MENU_LEFT_X, 50, MENU_WIDTH, 60);
+        buyTowerButton.setWidth(200);
+        buyTowerButton.setHeight(100);
+        buyTowerButton.setX(MENU_LEFT_X);
+        buyTowerButton.setY(50);
+        buyTowerButton.setBackground(Utils.newSpriteDrawable(AssetLoader.getHudTexture(AssetLoader.HUD_TEXTURE.BORDER)));
+
+        /*
+        buyTowerContainer.setBounds(MENU_LEFT_X, 50, MENU_WIDTH, 80);
+        buyTowerContainer.add(buyTowerButton);
+        buyTowerButton.center();
+        buyTowerContainer.setBackground(Utils.newSpriteDrawable(AssetLoader.getHudTexture(AssetLoader.HUD_TEXTURE.BORDER)));
+        */
 
         stage.addActor(statusTable);
         stage.addActor(menuContainer);
         stage.addActor(towerDescriptionTable);
         stage.addActor(buyTowerButton);
+
+
 
         this.statusTableX = statusTable.getX();
         this.statusTableY = statusTable.getY();

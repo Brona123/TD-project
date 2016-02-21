@@ -44,6 +44,24 @@ public class Node implements IndexedNode<Node>, Json.Serializable {
         index = Node.Indexer.getIndex();
     }
 
+    public Node(Node node, float x, float y) {
+        this.type = node.type;
+        this.index = node.index;
+        this.start = node.start;
+        this.end = node.end;
+        this.path = node.path;
+        this.buildableLocation = node.buildableLocation;
+
+        this.x = x;
+        this.y = y;
+
+        this.object = node.object;
+        this.tower = node.tower;
+        this.towerRef = node.towerRef;
+
+        this.pathStartNodeIndex = node.pathStartNodeIndex;
+    }
+
     @Override
     public int getIndex() {
         return index;

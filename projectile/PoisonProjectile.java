@@ -1,4 +1,4 @@
-package fi.joutsijoki.tower;
+package fi.joutsijoki.projectile;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -9,12 +9,11 @@ import fi.joutsijoki.Utils;
 import fi.joutsijoki.enemy.Enemy;
 
 /**
- * Created by Sami on 21.1.2016.
+ * Created by Sami on 23.1.2016.
  */
-public class ShadowProjectile extends Projectile {
-    private float speed = 0.05f;
+public class PoisonProjectile extends Projectile {
 
-    public ShadowProjectile(Vector2 fromVec, Enemy target, int damage) {
+    public PoisonProjectile(Vector2 fromVec, Enemy target, int damage) {
         this.pos = new Vector2(fromVec);
         this.fromVec = new Vector2(fromVec);
         this.toVec = Utils.centerPos(target.getPos());
@@ -24,7 +23,7 @@ public class ShadowProjectile extends Projectile {
 
     @Override
     public void draw(SpriteBatch batch) {
-        batch.draw(GameField.assetLoader.getProjectileTexture(AssetLoader.PROJECTILE_TEXTURE.SHADOW)
+        batch.draw(GameField.assetLoader.getProjectileTexture(AssetLoader.PROJECTILE_TEXTURE.POISON)
                 , this.fromVec.x
                 , this.fromVec.y
                 , 12
@@ -37,13 +36,15 @@ public class ShadowProjectile extends Projectile {
             this.hitTarget = true;
             this.target.damage(this.damage);
         } else {
-            this.delta += this.speed;
-            this.pos = new Vector2(this.fromVec.lerp(this.toVec, delta));
+            this.pos = new Vector2(this.fromVec.lerp(this.toVec, 0.2f));
         }
     }
 
     public boolean isAtTarget(Vector2 v) {
-        if (this.delta >= 1f) {
+        if (v.x + 0.5f >= pos.x
+                && v.x - 0.5f <= pos.x
+                && v.y + 0.5f >= pos.y
+                && v.y - 0.5f <= pos.y) {
             return true;
         } else {
             return false;

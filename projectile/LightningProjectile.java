@@ -1,4 +1,4 @@
-package fi.joutsijoki.tower;
+package fi.joutsijoki.projectile;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;

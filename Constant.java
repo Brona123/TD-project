@@ -12,8 +12,8 @@ public class Constant {
     public static final int MAP_OFFSET_X = 0;
     public static final int MAP_OFFSET_Y = 0;
 
-    public static int MAP_WIDTH = 20;
-    public static int MAP_HEIGHT = 20;
+    public static int MAP_WIDTH = 10;
+    public static int MAP_HEIGHT = 10;
 
     public static int MAP_WIDTH_PIXELS;
     public static int MAP_HEIGHT_PIXELS;
